@@ -15,8 +15,6 @@ class WebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-    
         
         let url = NSURL (string: "https://www.imdb.com")
         let requestObj = NSURLRequest(URL: url!);

@@ -18,6 +18,8 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @IBOutlet weak var yearPickerView: UIPickerView!
     @IBOutlet weak var yearLabel: UILabel!
     
+    var URL = ""
+    
     
     lazy var apiController : GenericConnection = GenericConnection(delegate: self)
 
@@ -49,7 +51,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
         ///http://192.168.1.14/?action=tv&tv=%22The%20Flash%22&season=2&episode=8&avail=1&db=show
         self.apiController.delegate = self
-        self.apiController.urlRequest(self.data, URL: "?", view: self.view)
+        self.apiController.urlRequest(self.data, URL: URL, view: self.view)
         
     }
 
@@ -60,26 +62,29 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         do {
             let json = try NSJSONSerialization.JSONObjectWithData(result, options: .MutableLeaves) as! NSDictionary
             
-            if (json["success"] as? Bool == true) {
+            let alert = UIAlertController(title: "", message:"", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default) { _ in
                 
-                if let auth = json["type"] as? String {
-                    if auth == "1" {
-                        
-                    } else if auth == "0" {
-                        
-                    }
-                }
-               
-                
-            } else  {
-               
             }
             
+            if (json["success"] as? Bool == true) {
+                alert.title = "Succesfull"
+                
+            } else  {
+                alert.title = "Error"
+            }
+            
+            alert.addAction(action)
+            self.presentViewController(alert, animated: true){}
         }  catch let parseError {
             print(parseError)
             
             
         }
+        
+        self.movieTextField.text = ""
+        self.yearLabel.text = "Year"
+        self.yearLabel.textColor = UIColor.lightGrayColor()
 
 
     }

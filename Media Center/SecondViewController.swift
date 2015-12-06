@@ -14,6 +14,14 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var showName: UITextField!
     @IBOutlet weak var showSeason: UITextField!
     @IBOutlet weak var showEpisode: UITextField!
+    @IBOutlet weak var addShow: UIButton!
+    @IBOutlet weak var cancelUpdate: UIBarButtonItem!
+    var refreshControl:UIRefreshControl!
+    
+    var editingMode = false
+    var editingRow: Int?
+    
+    var URL = ""
     
     var data = [String : String]()
     var showArray = [Show]()
@@ -31,7 +39,14 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //self.refreshControl = UIRefreshControl()
+        //self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        //self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        //self.collectionView?.addSubview(refreshControl)
        
+        self.navigationItem.leftBarButtonItem = nil
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView()
@@ -48,7 +63,7 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
         
         ///http://192.168.1.14/?action=tv&tv=%22The%20Flash%22&season=2&episode=8&avail=1&db=show
         self.apiController.delegate = self
-        self.apiController.urlRequest(self.data, URL: "?", view: self.view)
+        self.apiController.urlRequest(self.data, URL: URL, view: self.view)
         
     }
 
@@ -117,30 +132,65 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
     func DismissKeyboard(){
         view.endEditing(true)
     }
+    @IBAction func cancelUpdate(sender: AnyObject) {
+        
+        self.showName.text = ""
+        self.showEpisode.text = ""
+        self.showSeason.text = ""
+        self.addShow.setTitle("Add", forState: .Normal)
+        self.navigationItem.leftBarButtonItem = nil
+        self.tableView.reloadData()
+        
+    }
 
 
     @IBAction func addShow(sender: AnyObject) {
         
+        var dbAction = "add"
+        var showAvial = "1"
         
-        let newShow = Show()
-        newShow.setName(self.showName.text!)
-        newShow.setSeason(self.showSeason.text!)
-        newShow.setEpisode(self.showEpisode.text!)
-        newShow.setAvail(1)
-        self.showArray.append(newShow)
+        if editingMode {
+            
+            self.showArray[self.editingRow!].setName(self.showName.text!)
+            self.showArray[self.editingRow!].setSeason(self.showSeason.text!)
+            self.showArray[self.editingRow!].setEpisode(self.showEpisode.text!)
+            showAvial = String(self.showArray[self.editingRow!].getAvail())
+            dbAction = "edit"
+            
+        } else {
+            
+            let newShow = Show()
+            newShow.setName(self.showName.text!)
+            newShow.setSeason(self.showSeason.text!)
+            newShow.setEpisode(self.showEpisode.text!)
+            newShow.setAvail(1)
+            self.showArray.append(newShow)
+            dbAction = "add"
+            showAvial = "1"
+        }
+        
+       
         
         self.data["action"] = "addTV"
         self.data["tv"] = self.showName.text!
         self.data["season"] = self.showSeason.text!
         self.data["episode"] = self.showEpisode.text!
-        self.data["avail"] = "1"
-        self.data["db"] = "add"
+        self.data["avail"] = showAvial
+        self.data["db"] = dbAction
         
         self.connection = Connection.upload
         
         ///http://192.168.1.14/?action=tv&tv=%22The%20Flash%22&season=2&episode=8&avail=1&db=show
         self.apiController.delegate = self
-        self.apiController.urlRequest(self.data, URL: "?", view: self.view)
+        self.apiController.urlRequest(self.data, URL: URL, view: self.view)
+        
+        self.editingMode = false
+        
+        self.showName.text = ""
+        self.showEpisode.text = ""
+        self.showSeason.text = ""
+        self.addShow.setTitle("Add", forState: .Normal)
+        self.navigationItem.leftBarButtonItem?.customView?.hidden = true
 
     }
 
@@ -166,7 +216,6 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
         
         
         return cell
-        
     }
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
@@ -181,10 +230,86 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         //let cell = self.tableView.cellForRowAtIndexPath(indexPath) as! ShowTableViewCell
-        
         return indexPath
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
     }
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        
+        let cell = self.tableView.cellForRowAtIndexPath(indexPath) as! ShowTableViewCell
+        var watch_unwatch = ""
+        var watchValue = "1"
+        var watchDBAction = "continue"
+        
+        if(cell.accessoryType == .Checkmark) {
+            watch_unwatch = "Unwatch"
+            watchValue = "0"
+            watchDBAction = "halt"
+           
+        } else {
+            watch_unwatch = "Watch"
+            watchValue = "1"
+            watchDBAction = "continue"
+           
+        }
+        
+        let withdrawn = UITableViewRowAction(style: .Normal, title: "Remove") { action, index in
+            self.updateTVShows(self.showArray[indexPath.row].getName(),
+                showSeason: self.showArray[indexPath.row].getSeason(), showEpisode: self.showArray[indexPath.row].getEpisde(), showAvaiL: "1", dbAction: "delete")
+            self.showArray.removeAtIndex(indexPath.row)
+        }
+        let share = UITableViewRowAction(style: .Normal, title: "Edit") { action, index in
+            self.showName.text = self.showArray[indexPath.row].getName()
+            self.showSeason.text = self.showArray[indexPath.row].getSeason()
+            self.showEpisode.text = self.showArray[indexPath.row].getEpisde()
+            self.addShow.setTitle("Update", forState: .Normal)
+            self.editingRow = indexPath.row
+            self.editingMode = true
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelUpdate:")
+        }
+        let message = UITableViewRowAction(style: .Normal, title: watch_unwatch) { action, index in
+            self.updateTVShows(self.showArray[indexPath.row].getName(),
+                showSeason: self.showArray[indexPath.row].getSeason(), showEpisode: self.showArray[indexPath.row].getEpisde(), showAvaiL: watchValue, dbAction: watchDBAction)
+           self.showArray[indexPath.row].setAvail(Int(watchValue)!)
+            
+        }
+        message.backgroundColor = UIColor(red: 110.0/255.0, green: 197.0/255.0, blue: 233.0/255.0, alpha: 1)
+        share.backgroundColor = UIColor(red: 255.0/255.0, green: 197.0/255.0, blue: 108.0/255.0, alpha: 1)
+        withdrawn.backgroundColor = UIColor(red: 255.0/255.0, green: 89.0/255.0, blue: 89.0/255.0, alpha: 1)
+        
+        return [withdrawn, message, share]
+    }
 
-}
+    
+    func updateTVShows(showName:String, showSeason:String, showEpisode:String, showAvaiL:String, dbAction:String) {
+        
+        //addTV
+        //let newShow = Show()
+        //newShow.setName(self.showName.text!)
+        //newShow.setSeason(self.showSeason.text!)
+        //newShow.setEpisode(self.showEpisode.text!)
+        //newShow.setAvail(1)
+        //self.showArray.append(newShow)
+        
+        self.data["action"] = "addTV"
+        self.data["tv"] = showName
+        self.data["season"] = showSeason
+        self.data["episode"] = showEpisode
+        self.data["avail"] = showAvaiL
+        self.data["db"] = dbAction
+        
+        self.connection = Connection.upload
+        
+        ///http://192.168.1.14/?action=tv&tv=%22The%20Flash%22&season=2&episode=8&avail=1&db=show
+        self.apiController.delegate = self
+        self.apiController.urlRequest(self.data, URL: URL, view: self.view)
+
+    }
+ }
 
