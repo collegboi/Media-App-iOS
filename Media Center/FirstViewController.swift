@@ -12,6 +12,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 
     
     var data = [String : String]()
+    var imageArraay = [Image]()
     
     @IBOutlet weak var movieTextField: UITextField!
     
@@ -19,7 +20,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @IBOutlet weak var yearLabel: UILabel!
     
     var URL = ""
-    
+    //movie.php?action=find&search=iron
     
     lazy var apiController : GenericConnection = GenericConnection(delegate: self)
 
@@ -41,13 +42,15 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 
     @IBAction func searchButton(sender: AnyObject) {
         
-        if self.movieTextField.text!.isEmpty && self.yearLabel.text != "Year" {
-            
+        var searchField = self.movieTextField.text!
+        
+        if !self.yearLabel.text!.isEmpty {
+            searchField += " \(self.yearLabel.text!)"
         }
         
-        self.data["action"] = "movie"
-        self.data["movieName"] = self.movieTextField.text
-        self.data["year"] = self.yearLabel.text
+        
+        self.data["action"] = "find"
+        self.data["search"] = searchField
         
         ///http://192.168.1.14/?action=tv&tv=%22The%20Flash%22&season=2&episode=8&avail=1&db=show
         self.apiController.delegate = self
@@ -60,25 +63,28 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     func didFinishUpload(result: NSData) {
      
         do {
-            let json = try NSJSONSerialization.JSONObjectWithData(result, options: .MutableLeaves) as! NSDictionary
             
-            let alert = UIAlertController(title: "", message:"", preferredStyle: .Alert)
-            let action = UIAlertAction(title: "OK", style: .Default) { _ in
+            let feeds = try NSJSONSerialization.JSONObjectWithData(result, options: .MutableLeaves) as! NSArray
+            
+            for feed in feeds {
                 
+                let image = Image()
+                
+                image.setImage(feed["imageLink"] as! String)
+                image.setLink(feed["movieLink"] as! String)
+                self.imageArraay.append(image)
             }
             
-            if (json["success"] as? Bool == true) {
-                alert.title = "Succesfull"
-                
-            } else  {
-                alert.title = "Error"
-            }
             
-            alert.addAction(action)
-            self.presentViewController(alert, animated: true){}
         }  catch let parseError {
             print(parseError)
             
+            let alert = UIAlertController(title: "Error", message:"", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default) { _ in
+            
+            }
+            alert.addAction(action)
+            self.presentViewController(alert, animated: true){}
             
         }
         
@@ -86,7 +92,20 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         self.yearLabel.text = "Year"
         self.yearLabel.textColor = UIColor.lightGrayColor()
 
-
+        
+        if self.imageArraay.count > 0 {
+            self.performSegueWithIdentifier("movieSegue", sender: self)
+            
+        } else {
+            
+            let alert = UIAlertController(title: "Error", message:"No movies found", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                
+            }
+            alert.addAction(action)
+            self.presentViewController(alert, animated: true){}
+            
+        }
     }
     
     
@@ -96,6 +115,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     func DismissKeyboard(){
         view.endEditing(true)
     }
+
     
     // UIPickerController Methods
     
@@ -128,4 +148,19 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
              years.append(string)
         }
     }
+    
+    
+    //MARK: Segue Delegate
+    // MARK: - Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        
+        if (segue.identifier == "movieSegue") {
+            
+            let subVC: PickMovieCollectionViewController = segue.destinationViewController as! PickMovieCollectionViewController
+            subVC.movieArray = self.imageArraay
+        }
+        
+    }
+
 }

@@ -93,11 +93,64 @@
                         <outlet property="movieTextField" destination="tE9-6j-PSi" id="4NW-zc-Ldz"/>
                         <outlet property="yearLabel" destination="EYP-tp-9yQ" id="z4t-MT-A5h"/>
                         <outlet property="yearPickerView" destination="y01-Gt-JFd" id="7bJ-cY-LnB"/>
+                        <segue destination="kgB-8y-n48" kind="show" identifier="movieSegue" id="hP2-aW-Ydv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1456" y="-332"/>
+        </scene>
+        <!--Pick Movie Collection View Controller-->
+        <scene sceneID="5bO-JI-XuR">
+            <objects>
+                <collectionViewController id="kgB-8y-n48" customClass="PickMovieCollectionViewController" customModule="Media_Center" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="odT-8d-NhH">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="qdd-0a-okx">
+                            <size key="itemSize" width="291" height="217"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="parallaxCell" id="Nb8-5z-Cfh" customClass="MovieCollectionViewCell" customModule="Media_Center" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="64" width="291" height="217"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="291" height="217"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UfU-ym-p7x">
+                                            <rect key="frame" x="0.0" y="0.0" width="291" height="217"/>
+                                            <animations/>
+                                        </imageView>
+                                    </subviews>
+                                    <animations/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstItem="UfU-ym-p7x" firstAttribute="leading" secondItem="Nb8-5z-Cfh" secondAttribute="leading" id="GBF-cz-NVQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="UfU-ym-p7x" secondAttribute="trailing" id="Woa-LK-8Vk"/>
+                                    <constraint firstItem="UfU-ym-p7x" firstAttribute="top" secondItem="Nb8-5z-Cfh" secondAttribute="top" id="uh3-Ma-Eow"/>
+                                    <constraint firstAttribute="bottom" secondItem="UfU-ym-p7x" secondAttribute="bottom" id="yd4-Im-Mda"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="UfU-ym-p7x" id="w7F-fX-PpJ"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="kgB-8y-n48" id="JPp-6n-Zp8"/>
+                            <outlet property="delegate" destination="kgB-8y-n48" id="beQ-Qw-qFR"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QXo-Xi-QKa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2146" y="-1163"/>
         </scene>
         <!--IMDB.com-->
         <scene sceneID="7ak-7o-Sqv">

@@ -19,6 +19,10 @@
 		B2A426111C138CF800101E7C /* GenericConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A426101C138CF800101E7C /* GenericConnection.swift */; };
 		B2A426131C13B03400101E7C /* ShowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A426121C13B03400101E7C /* ShowTableViewCell.swift */; };
 		B2A426151C13B35B00101E7C /* Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A426141C13B35B00101E7C /* Show.swift */; };
+		B2A426171C163E4C00101E7C /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A426161C163E4C00101E7C /* Image.swift */; };
+		B2A4261B1C1657BB00101E7C /* PickMovieCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A4261A1C1657BB00101E7C /* PickMovieCollectionViewController.swift */; };
+		B2A4261D1C1658E500101E7C /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A4261C1C1658E500101E7C /* MovieCollectionViewCell.swift */; };
+		B2A4261F1C165A0800101E7C /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A4261E1C165A0800101E7C /* Cache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +61,10 @@
 		B2A426101C138CF800101E7C /* GenericConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericConnection.swift; sourceTree = "<group>"; };
 		B2A426121C13B03400101E7C /* ShowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowTableViewCell.swift; sourceTree = "<group>"; };
 		B2A426141C13B35B00101E7C /* Show.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Show.swift; sourceTree = "<group>"; };
+		B2A426161C163E4C00101E7C /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Image.swift; path = ../Image.swift; sourceTree = "<group>"; };
+		B2A4261A1C1657BB00101E7C /* PickMovieCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickMovieCollectionViewController.swift; sourceTree = "<group>"; };
+		B2A4261C1C1658E500101E7C /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
+		B2A4261E1C165A0800101E7C /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				B2A425DE1C13804C00101E7C /* AppDelegate.swift */,
+				B2A426161C163E4C00101E7C /* Image.swift */,
 				B2A425E01C13804C00101E7C /* FirstViewController.swift */,
 				B2A425E21C13804C00101E7C /* SecondViewController.swift */,
 				B2A425E41C13804C00101E7C /* Main.storyboard */,
@@ -118,6 +127,9 @@
 				B2A425E91C13804C00101E7C /* LaunchScreen.storyboard */,
 				B2A425EC1C13804C00101E7C /* Info.plist */,
 				B2A4260E1C138B9E00101E7C /* WebViewController.swift */,
+				B2A4261A1C1657BB00101E7C /* PickMovieCollectionViewController.swift */,
+				B2A4261C1C1658E500101E7C /* MovieCollectionViewCell.swift */,
+				B2A4261E1C165A0800101E7C /* Cache.swift */,
 			);
 			path = "Media Center";
 			sourceTree = "<group>";
@@ -272,10 +284,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2A426131C13B03400101E7C /* ShowTableViewCell.swift in Sources */,
+				B2A426171C163E4C00101E7C /* Image.swift in Sources */,
 				B2A426111C138CF800101E7C /* GenericConnection.swift in Sources */,
 				B2A425E31C13804C00101E7C /* SecondViewController.swift in Sources */,
+				B2A4261F1C165A0800101E7C /* Cache.swift in Sources */,
 				B2A425DF1C13804C00101E7C /* AppDelegate.swift in Sources */,
 				B2A426151C13B35B00101E7C /* Show.swift in Sources */,
+				B2A4261B1C1657BB00101E7C /* PickMovieCollectionViewController.swift in Sources */,
+				B2A4261D1C1658E500101E7C /* MovieCollectionViewCell.swift in Sources */,
 				B2A425E11C13804C00101E7C /* FirstViewController.swift in Sources */,
 				B2A4260F1C138B9E00101E7C /* WebViewController.swift in Sources */,
 			);

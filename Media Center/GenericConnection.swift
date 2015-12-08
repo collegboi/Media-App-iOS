@@ -93,18 +93,14 @@ class GenericConnection: NSObject,NSURLSessionDelegate, NSURLSessionTaskDelegate
     }
     
     
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?)
-    {
-//        let myAlert = UIAlertView(title: "Alert", message: error?.localizedDescription, delegate: nil, cancelButtonTitle: "Ok")
-//        myAlert.show()
-//        
-//        //self.uploadButton.enabled = true
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+
         
     }
     
     
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64)
-    {
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        
         let uploadProgress:Float = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
         
         //println(uploadProgress)
@@ -114,8 +110,8 @@ class GenericConnection: NSObject,NSURLSessionDelegate, NSURLSessionTaskDelegate
         
     }
     
-    func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void)
-    {
+    func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
+        
         //self.uploadButton.enabled = true
         self.progressLabel?.removeFromSuperview()
         self.progressView?.removeFromSuperview()
